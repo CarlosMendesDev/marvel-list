@@ -26,11 +26,15 @@ export async function getMarvelApiSearch({ commit }, { nameStartsWith }) {
 }
 
 export async function getHeroDetail({ commit }, { id }) {
-  const params = {
-    apikey: 'ae85e8b9723f65dae5238770fbad9fea',
-  };
+  try {
+    const params = {
+      apikey: 'ae85e8b9723f65dae5238770fbad9fea',
+    };
 
-  const { data } = await api.get(`https://gateway.marvel.com:443/v1/public/characters/${id}`, { params });
+    const { data } = await api.get(`https://gateway.marvel.com:443/v1/public/characters/${id}`, { params });
 
-  commit('setHeroDetail', { heroDetail: data.data.results[0] });
+    commit('setHeroDetail', { heroDetail: data?.data.results[0] ?? null });
+  } catch (error) {
+    commit('setHeroDetail', { heroDetail: null });
+  }
 }

@@ -1,6 +1,6 @@
 <template lang="pug">
-q-page(class="column q-pa-md q-gutter-y-md")
-  section(v-if="!loading" class="col-auto")
+q-page(v-if="!loading" class="column q-pa-md q-gutter-y-md")
+  section(class="col-auto")
     q-img(
       :src="`${heroDetail.thumbnail.path}.${heroDetail.thumbnail.extension}`"
       width="100%"
@@ -10,8 +10,10 @@ q-page(class="column q-pa-md q-gutter-y-md")
   section(class="text-h3 text-bold text-white text-center")
     | {{ heroDetail.name }}
   q-card(class="col full-height")
-    q-card-section(class="bg-white full-width")
+    q-card-section(v-if="heroDetail.description" class="bg-white full-width")
       | {{ heroDetail.description }}
+    q-card-section(v-else class="bg-white text-center full-width text-h6")
+      | This hero has no description...
 </template>
 
 <script>
@@ -35,8 +37,17 @@ export default {
     this.heroDetail = {};
 
     await this.$store.dispatch('app/getHeroDetail', { id: this.$route.params.id });
-
-    this.loading = false;
+    console.log(this.heroDetail);
+    if (!this.heroDetail) {
+      this.$q.dialog({
+        title: 'Not found',
+        message: 'Try again in a few seconds',
+      }).onOk(() => {
+        this.$router.push({ name: 'index' });
+      });
+    } else {
+      this.loading = false;
+    }
   },
 };
 </script>

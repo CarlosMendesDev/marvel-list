@@ -5,7 +5,7 @@ q-page()
     :offset="10"
     v-if="loadingMore"
   )
-    div(class="q-pt-md q-gutter-y-md flex flex-center")
+    div(class="q-pt-md q-gutter-md flex flex-center")
       Card(
         v-for="hero in marvelList"
         :name="hero.name"
